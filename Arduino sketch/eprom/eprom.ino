@@ -1,4 +1,3 @@
-//FIXME
 const int programPin=3;
 const int readPin=4;
 const int enablePin=2;
@@ -6,39 +5,10 @@ const int enablePin=2;
 const unsigned long romSize=1024*1024;
 
 
-//The pinout from the eprom is different from the snes pinout 
-int adrPins[20]={22,//eprom A0  snes A0
-                  23,//eprom A1  snes A1
-                  24,//eprom A2  snes A2
-                  25,//eprom A3  snes A3
-                  26,//eprom A4  snes A4
-                  27,//eprom A5  snes A5
-                  28,//eprom A6  snes A6
-                  29,//eprom A7  snes A7
-                  30,//eprom A8  snes A8
-                  31,//eprom A9  snes A9
-                  32,//eprom A10 snes A10
-                  33,//eprom A11 snes A11
-                  34,//eprom A12 snes A12
-                  35,//eprom A13 snes A13
-                  36,//eprom A14 snes A14
-                  37,//eprom A15 snes A15
-                  40,//38,//eprom A16 snes A18 *
-                  41,//39,//eprom A17 snes A19 *
-                  38,//40,//eprom A18 snes A16 *
-                  39,//41 //eprom A19 snes A17 * 
-                  };
-                  
+//The pinout from the eprom is different from the snes pinout
+int adrPins[20]={22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40};
+
 char dataPins[8]={5,6,7,8,9,10,11,12};
-/*
-Frame Format
-program:
-|preamble|opt|addr0|addr1|addr2|numbbutes|bytes|checksum|end
-read:
-|preamble|opt|addr0|addr1|addr2|numbbutes|end
-
-
-*/
 byte inByte=0;
 unsigned int secH=0,secL=0;
 
@@ -47,19 +17,15 @@ void setup() {
   pinMode(programPin,OUTPUT);
   pinMode(readPin,OUTPUT);
   pinMode(enablePin,OUTPUT);
-  //FIXME 
   for(int i=0;i<20;i++){
     pinMode(adrPins[i],OUTPUT);
-  }  
+  }
   digitalWrite(programPin,LOW);
   digitalWrite(readPin,LOW);
   digitalWrite(enablePin,HIGH);
   Serial.begin(230400);
   delay(1000);
   programMode();
-//  setAddress(0);
-//  programByte(0x78);
-//  //writeSector(5);
 }
 int index=0;
 void loop() {
@@ -101,12 +67,9 @@ void readMode(){
   for(int i=0;i<8;i++){
     pinMode(dataPins[i],INPUT);
   }
-//  for(int i=0;i<8;i++){
-//    digitalWrite(dataPins[i],HIGH);
-//  }
   digitalWrite(programPin,LOW);
   digitalWrite(readPin,LOW);
-  
+
 }
 void setAddress(uint32_t Addr){
     for(int i=0;i<8;i++){
@@ -139,9 +102,6 @@ void setData(char Data){
   }
 }
 void programByte(byte Data){
-  //select address
-  //
-  //setAddress(adr); 
   setData(Data);
   //Vpp pulse
   delayMicroseconds(4);
@@ -155,7 +115,7 @@ void writeSector(unsigned char sectorH,unsigned char sectorL){
   unsigned long address=0;
   byte CHK=sectorH,CHKreceived;
   CHK^=sectorL;
-  
+
   address=sectorH;
   address=(address<<8)|sectorL;
   address*=128;
@@ -168,7 +128,7 @@ void writeSector(unsigned char sectorH,unsigned char sectorL){
   while(Serial.available()==0);
   CHKreceived=Serial.read();
   programMode();
-  //only program the bytes if the checksum is equal to the one received
+  //only program the bytes into eprom if the checksum is equal to the one received
   if(CHKreceived==CHK){
     for (int i = 0; i < 128; i++){
       setAddress(address++);
@@ -177,7 +137,7 @@ void writeSector(unsigned char sectorH,unsigned char sectorL){
   Serial.write(CHK);
   }
   readMode();
-  
+
 }
 int readROM(){
   unsigned long num=1024*1024;
@@ -195,9 +155,7 @@ int readROM(){
     //checksum^=data;
   }
   digitalWrite(readPin,HIGH);
-    
+
   //Serial.write(checksum);
   //Serial.write(0xAA);
 }
-
-
