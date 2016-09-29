@@ -2,8 +2,11 @@
 import serial,time #You need the pyserial library
 import struct
 
-ser = serial.Serial('/dev/ttyACM0', 230400, timeout=0)
+ser = serial.Serial('/dev/ttyACM0', 250000, timeout=0)
 #time.sleep(10);#my arduino bugs if data is written to the port after opening it
+#filename='sonic.bin'#name of the rom, bin format
+#f=open(name,'rb');
+#with open(filename,'rb') as f:
 romsize=1024
 
 while True:
@@ -32,7 +35,7 @@ while True:
         f = open(name, 'ab')#yes, that simple
         while (numBytes<romsize):
             while ser.inWaiting()==0:
-                print("waiting...\n",numBytes)
+                print("Waiting. Current porcentage:%.2f"%(numBytes*100/romsize),"%",end='\r')
                 time.sleep(0.1)
             data = ser.read(1)#must read the bytes and put in a file
             f.write(data)
@@ -49,17 +52,20 @@ while True:
             time.sleep(0.001)
             ser.write(struct.pack(">B",i>>8))
             CHK=i>>8
+            #CHK=ord(CHK)
             time.sleep(0.001)
             ser.write(struct.pack(">B",i&0xFF))
             CHK^=i&0xFF
             time.sleep(0.001)
             data=f.read(128);
             print(data)
+            #print("CHK:", CHK)
             for j in range(len(data)):
                  CHK=CHK^data[j]
             time.sleep(0.001)
             print("Sector:",i)
             print("CHK:", CHK)
+            #ser.write(data)
             response=~CHK
             while response!=CHK:
                 ser.write(data)
