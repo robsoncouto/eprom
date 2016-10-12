@@ -6,7 +6,7 @@ const int enablePin=2;
 const unsigned long romSize=1024*1024;
 
 
-//The pinout from the eprom is different from the snes pinout 
+//The pinout from the eprom is different from the snes pinout
 int adrPins[20]={22,//eprom A0  snes A0
                   23,//eprom A1  snes A1
                   24,//eprom A2  snes A2
@@ -26,16 +26,10 @@ int adrPins[20]={22,//eprom A0  snes A0
                   40,//38,//eprom A16 snes A18 *
                   41,//39,//eprom A17 snes A19 *
                   38,//40,//eprom A18 snes A16 *
-                  39,//41 //eprom A19 snes A17 * 
+                  39,//41 //eprom A19 snes A17 *
                   };
-                  
+
 char dataPins[8]={5,6,7,8,9,10,11,12};
-/*
-Frame Format
-program:
-|preamble|opt|addr0|addr1|addr2|numbbutes|bytes|checksum|end
-read:
-|preamble|opt|addr0|addr1|addr2|numbbutes|end
 
 
 */
@@ -46,19 +40,15 @@ void setup() {
   pinMode(programPin,OUTPUT);
   pinMode(readPin,OUTPUT);
   pinMode(enablePin,OUTPUT);
-  //FIXME 
   for(int i=0;i<20;i++){
     pinMode(adrPins[i],OUTPUT);
-  }  
+  }
   digitalWrite(programPin,LOW);
   digitalWrite(readPin,LOW);
   digitalWrite(enablePin,HIGH);
   Serial.begin(250000);
   delay(1000);
   programMode();
-//  setAddress(0);
-//  programByte(0x78);
-//  //writeSector(5);
 }
 int index=0;
 void loop() {
@@ -99,12 +89,9 @@ void readMode(){
   for(int i=0;i<8;i++){
     pinMode(dataPins[i],INPUT);
   }
-//  for(int i=0;i<8;i++){
-//    digitalWrite(dataPins[i],HIGH);
-//  }
   digitalWrite(programPin,LOW);
   digitalWrite(readPin,LOW);
-  
+
 }
 void setAddress(uint32_t Addr){
     for(int i=0;i<8;i++){
@@ -137,9 +124,6 @@ void setData(char Data){
   }
 }
 void programByte(byte Data){
-  //select address
-  //
-  //setAddress(adr); 
   setData(Data);
   //Vpp pulse
   delayMicroseconds(4);
@@ -153,7 +137,7 @@ void writeSector(unsigned char sectorH,unsigned char sectorL){
   unsigned long address=0;
   byte CHK=sectorH,CHKreceived;
   CHK^=sectorL;
-  
+
   address=sectorH;
   address=(address<<8)|sectorL;
   address*=128;
@@ -175,7 +159,7 @@ void writeSector(unsigned char sectorH,unsigned char sectorL){
   Serial.write(CHK);
   }
   readMode();
-  
+
 }
 int readROM(){
   unsigned long num=1024*1024;
@@ -193,9 +177,7 @@ int readROM(){
     //checksum^=data;
   }
   digitalWrite(readPin,HIGH);
-    
+
   //Serial.write(checksum);
   //Serial.write(0xAA);
 }
-
-
