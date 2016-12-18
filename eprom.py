@@ -6,17 +6,29 @@ ser = serial.Serial('/dev/ttyACM0', 250000, timeout=0)
 #time.sleep(10);#my arduino bugs if data is written to the port after opening it
 romsize=1024
 
+print("      ________    _________    _________    _________     _____________ ")
+print("    /  ______/|  /  ___   /|  /  ___   /|  /   __   /|   /            /|")
+print("   /  /_____ |/ /  /__/  / / /  /__/  / / /  /  /  / /  /  /\   /\   / /")
+print("  /  ______/|  /   _____/ / /     ___/ / /  /  /  / /  /  / /  / /  / / ")
+print(" /  /______|/ /  / _____|/ /  /\  \__|/ /  /__/  / /  /  / /  / /  / /  ")
+print("/________/|  /__/ /       /__/  \__/|  /________/ /  /__/ /__/ /__/ /   ")
+print("|________|/  |__|/        |__|/ |__|/  |________|/   |__|/|__|/|__|/    ")
+print("\n")
+print("  Robson Couto 2016")
+print("  www.dragaosemchama.com.br")
+print("  github.com/robsoncouto/eprom\n")
+
+
+
 while True:
-    print("===========================================")
-    print("           What do you want do do?         ")
-    print("                                           ")
-    print("              1-dump                       ")
-    print("              2-burn                       ")
-    print("              3-info                       ")
-    print("              4-quit                       ")
-    print("                              2016         ")
-    print("                                  Robson C ")
-    print("===========================================")
+
+    print("  What would you like to do?      ")
+    print("                                  ")
+    print("          1-Read eprom            ")
+    print("          2-burn eprom            ")
+    print("          3-about this script     ")
+    print("          4-quit                \n")
+
     option=int(input())
     romsize=1*1024*1024
     numsectors=int(romsize/128) # I am sending data in 128 byte chunks
