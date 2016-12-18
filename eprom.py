@@ -6,13 +6,13 @@ ser = serial.Serial('/dev/ttyACM0', 250000, timeout=0)
 #time.sleep(10);#my arduino bugs if data is written to the port after opening it
 romsize=1024
 
-print("      ________    _________    _________    _________     _____________ ")
-print("    /  ______/|  /  ___   /|  /  ___   /|  /   __   /|   /            /|")
-print("   /  /_____ |/ /  /__/  / / /  /__/  / / /  /  /  / /  /  /\   /\   / /")
-print("  /  ______/|  /   _____/ / /     ___/ / /  /  /  / /  /  / /  / /  / / ")
-print(" /  /______|/ /  / _____|/ /  /\  \__|/ /  /__/  / /  /  / /  / /  / /  ")
-print("/________/|  /__/ /       /__/  \__/|  /________/ /  /__/ /__/ /__/ /   ")
-print("|________|/  |__|/        |__|/ |__|/  |________|/   |__|/|__|/|__|/    ")
+print("      ________    _________    _________    _________    _____________ ")
+print("    /  ______/|  /  ___   /|  /  ___   /|  /   __   /|  /            /|")
+print("   /  /_____ |/ /  /__/  / / /  /__/  / / /  /  /  / / /  /\   /\   / /")
+print("  /  ______/|  /   _____/ / /     ___/ / /  /  /  / / /  / /  / /  / / ")
+print(" /  /______|/ /  / _____|/ /  /\  \__|/ /  /__/  / / /  / /  / /  / /  ")
+print("/________/|  /__/ /       /__/ /\__/|  /________/ / /__/ /__/ /__/ /   ")
+print("|________|/  |__|/        |__|/ |__|/  |________|/  |__|/|__|/|__|/    ")
 print("\n")
 print("  Robson Couto 2016")
 print("  www.dragaosemchama.com.br")
@@ -29,11 +29,10 @@ while True:
     print("          3-about this script     ")
     print("          4-quit                \n")
 
-    option=int(input())
+    option=int(input("Please insert a number:"))
     romsize=1*1024*1024
     numsectors=int(romsize/128) # I am sending data in 128 byte chunks
     block=0
-    print(option)
     if(option==1):
         name=input("What the name of the file?")
 
@@ -90,7 +89,7 @@ while True:
                     print("wrong checksum, sending chunk again\n")
         f.close()
     if(option==4):
-        print("We hope to see you again")
+        print("See ya!")
         break
 
     if(option==3):
@@ -99,3 +98,23 @@ while True:
         print("This script goes together with a Arduino sketch, both are used to read and program")
         print("eproms on the cheap.")
         print("Written by Robson Couto\n")
+    if(option==5):
+        ser.flushInput()
+        ser.write(b"\x55")
+        ser.write(bytes("r","ASCII"))
+        numBytes=0
+        blank=1
+        while (numBytes<romsize):
+            while ser.inWaiting()==0:
+                print("Reading from eprom. Current porcentage:{:.2%}".format(numBytes/romsize),end='\r')
+                time.sleep(0.1)
+            data = ser.read(1)
+            numBytes=numBytes+1
+            if ord(data)!=255:
+                blank=0
+                break
+        if blank==1:
+            print("\nThe chip is blank\n")
+        else:
+            print("\nThe chip seems to contain data\n")
+        print("Done\n")
