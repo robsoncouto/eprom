@@ -90,5 +90,12 @@ while True:
                     print("wrong checksum, sending chunk again\n")
         f.close()
     if(option==4):
-        print("see ya")
+        print("We hope to see you again")
         break
+
+    if(option==3):
+
+        print("\nA more detailed write up about this project is available at www.dragaosemchama.com.br")
+        print("This script goes together with a Arduino sketch, both are used to read and program")
+        print("eproms on the cheap.")
+        print("Written by Robson Couto\n")
