@@ -124,8 +124,10 @@ while True:
         megs=float(input("Please insert the size of the eprom in Megabytes"))
         romsize=megs*1024*1024
         numsectors=int(romsize/128) # I am sending data in 128 byte chunks
-        print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
-
+        if megs>1:
+            print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
+        else:
+            print("Eprom size changed to ",romsize/(1024),"KB\n")
 
     if(option==6):
         print("See ya!")
