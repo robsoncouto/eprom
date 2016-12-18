@@ -55,12 +55,12 @@ while True:
             CHK^=i&0xFF
             time.sleep(0.001)
             data=f.read(128);
-            print(data)
+            #print(data)
             for j in range(len(data)):
                  CHK=CHK^data[j]
             time.sleep(0.001)
-            print("Sector:",i)
-            print("CHK:", CHK)
+            print("Waiting. Current porcentage:%.2f"%(i*100/8192),"%",end='\r')
+            #print("CHK:", CHK)
             response=~CHK
             while response!=CHK:
                 ser.write(data)
