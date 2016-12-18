@@ -13,11 +13,13 @@ while True:
     print("              1-dump                       ")
     print("              2-burn                       ")
     print("              3-info                       ")
+    print("              4-quit                       ")
     print("                              2016         ")
     print("                                  Robson C ")
     print("===========================================")
     option=int(input())
     romsize=1*1024*1024
+    numsectors=int(romsize/128) # I am sending data in 128 byte chunks
     block=0
     print(option)
     if(option==1):
@@ -32,19 +34,18 @@ while True:
         f = open(name, 'ab')
         while (numBytes<romsize):
             while ser.inWaiting()==0:
-                print("Waiting. Current porcentage:%.2f"%(numBytes*100/romsize),"%",end='\r')
+                print("Reading from eprom. Current porcentage:{:.2%}".format(numBytes/romsize),end='\r')
                 time.sleep(0.1)
             data = ser.read(1)#must read the bytes and put in a file
             f.write(data)
             numBytes=numBytes+1
         f.close()
-        print("Done/n")
+        print("Done\n")
     if(option==2):
         name=input("What's the name of the file?")
         print(name)
         f = open(name, 'rb')
-
-        for i in range(8192):
+        for i in range(numsectors):
             ser.write(b"\x55")
             ser.write(bytes("w","ASCII" ))
             time.sleep(0.001)
@@ -59,7 +60,7 @@ while True:
             for j in range(len(data)):
                  CHK=CHK^data[j]
             time.sleep(0.001)
-            print("Waiting. Current porcentage:%.2f"%(i*100/8192),"%",end='\r')
+            print("Writing data. Current porcentage:{:.2%}".format(i/numsectors),end='\r')
             #print("CHK:", CHK)
             response=~CHK
             while response!=CHK:
@@ -67,8 +68,15 @@ while True:
                 ser.write(struct.pack(">B",CHK&0xFF))
                 timeout=30
                 while ser.inWaiting()==0:
-                    time.sleep(0.1)
-                    print("waiting for CHK response")
+                    time.sleep(0.01)
+                    timeout=timeout-1
+                    if timeout==0:
+                        print("could not get a response, please start again\n")
+                        break
                 response=ord(ser.read(1))
-                print("rsp", response)
+                if response!=CHK:
+                    print("wrong checksum, sending chunk again\n")
         f.close()
+    if(option==4):
+        print("see ya")
+        break
