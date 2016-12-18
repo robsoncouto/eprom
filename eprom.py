@@ -18,6 +18,9 @@ print("  Robson Couto 2016")
 print("  www.dragaosemchama.com.br")
 print("  github.com/robsoncouto/eprom\n")
 
+#Default value, 1MB chip:
+romsize=1*1024*1024
+numsectors=int(romsize/128) # I am sending data in 128 byte chunks
 
 
 while True:
@@ -27,12 +30,13 @@ while True:
     print("          1-Read eprom            ")
     print("          2-burn eprom            ")
     print("          3-about this script     ")
-    print("          4-quit                \n")
+    print("          4-blank check           ")
+    print("          5-select chip size      ")
+    print("                                  ")
+    print("          6-quit                \n")
 
     option=int(input("Please insert a number:"))
-    romsize=1*1024*1024
-    numsectors=int(romsize/128) # I am sending data in 128 byte chunks
-    block=0
+
     if(option==1):
         name=input("What the name of the file?")
 
@@ -88,9 +92,6 @@ while True:
                 if response!=CHK:
                     print("wrong checksum, sending chunk again\n")
         f.close()
-    if(option==4):
-        print("See ya!")
-        break
 
     if(option==3):
 
@@ -98,7 +99,7 @@ while True:
         print("This script goes together with a Arduino sketch, both are used to read and program")
         print("eproms on the cheap.")
         print("Written by Robson Couto\n")
-    if(option==5):
+    if(option==4):
         ser.flushInput()
         ser.write(b"\x55")
         ser.write(bytes("r","ASCII"))
@@ -118,3 +119,14 @@ while True:
         else:
             print("\nThe chip seems to contain data\n")
         print("Done\n")
+    if(option==5):
+        print("Current eprom size:",romsize/(1024*1024),"MB\n")
+        megs=float(input("Please insert the size of the eprom in Megabytes"))
+        romsize=megs*1024*1024
+        numsectors=int(romsize/128) # I am sending data in 128 byte chunks
+        print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
+
+
+    if(option==6):
+        print("See ya!")
+        break
