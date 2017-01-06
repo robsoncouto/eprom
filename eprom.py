@@ -48,6 +48,8 @@ while True:
         ser.write(bytes("r","ASCII"))
         numBytes=0
         f = open(name, 'ab')
+        #I just read the data and put it into a file.
+        #TODO - Checksum scheme as when burning
         while (numBytes<romsize):
             while ser.inWaiting()==0:
                 print("Reading from eprom. Current porcentage:{:.2%}".format(numBytes/romsize),end='\r')
@@ -66,6 +68,7 @@ while True:
             ser.write(b"\x55")
             ser.write(bytes("w","ASCII" ))
             time.sleep(0.001)
+            #send address of the block first
             ser.write(struct.pack(">B",i>>8))
             CHK=i>>8
             time.sleep(0.001)
@@ -74,12 +77,16 @@ while True:
             time.sleep(0.001)
             data=f.read(128);
             #print(data)
+
+            #Gets checksum from xoring the package
             for j in range(len(data)):
                  CHK=CHK^data[j]
             time.sleep(0.001)
             print("Writing data. Current porcentage:{:.2%}".format(i/numsectors),end='\r')
             #print("CHK:", CHK)
             response=~CHK
+
+            #keeps trying while the replied checksum is not correct
             while response!=CHK:
                 ser.write(data)
                 ser.write(struct.pack(">B",CHK&0xFF))
@@ -104,6 +111,7 @@ while True:
         print("Written by Robson Couto\n")
     #Blank check
     if(option==4):
+        #same as reading
         ser.flushInput()
         ser.write(b"\x55")
         ser.write(bytes("r","ASCII"))
@@ -118,6 +126,7 @@ while True:
             if ord(data)!=255:
                 blank=0
                 break
+        #Ends check on first byte not erased
         if blank==1:
             print("\nThe chip is blank\n")
         else:
@@ -133,7 +142,7 @@ while True:
             print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
         else:
             print("Eprom size changed to ",romsize/(1024),"KB\n")
-    
+
     if(option==6):
         print("See ya!")
         break
