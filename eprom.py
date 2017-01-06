@@ -1,6 +1,6 @@
 
 import serial,time #You need the pyserial library
-import struct
+import struct      #For packing data into bytes
 
 ser = serial.Serial('/dev/ttyACM0', 250000, timeout=0)
 #time.sleep(10);#my arduino bugs if data is written to the port after opening it
@@ -34,9 +34,10 @@ while True:
     print("          5-select chip size      ")
     print("                                  ")
     print("          6-quit                \n")
-
+    #get option from user:
     option=int(input("Please insert a number:"))
 
+    #Read EPROM
     if(option==1):
         name=input("What the name of the file?")
 
@@ -56,6 +57,7 @@ while True:
             numBytes=numBytes+1
         f.close()
         print("Done\n")
+    #Burn EPROM, see schematic at my website
     if(option==2):
         name=input("What's the name of the file?")
         print(name)
@@ -93,12 +95,14 @@ while True:
                     print("wrong checksum, sending chunk again\n")
         f.close()
 
+    #Just some info
     if(option==3):
 
         print("\nA more detailed write up about this project is available at www.dragaosemchama.com.br")
         print("This script goes together with a Arduino sketch, both are used to read and program")
         print("eproms on the cheap.")
         print("Written by Robson Couto\n")
+    #Blank check
     if(option==4):
         ser.flushInput()
         ser.write(b"\x55")
@@ -119,6 +123,7 @@ while True:
         else:
             print("\nThe chip seems to contain data\n")
         print("Done\n")
+    #Change size of EPROM, for reading EPROMs other than 1MB
     if(option==5):
         print("Current eprom size:",romsize/(1024*1024),"MB\n")
         megs=float(input("Please insert the size of the eprom in Megabytes"))
@@ -128,7 +133,7 @@ while True:
             print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
         else:
             print("Eprom size changed to ",romsize/(1024),"KB\n")
-
+    
     if(option==6):
         print("See ya!")
         break
