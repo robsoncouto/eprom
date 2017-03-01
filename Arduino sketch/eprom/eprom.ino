@@ -6,7 +6,13 @@ const int enablePin=2;
 const unsigned long romSize=1024*1024;
 
 
-//The pinout from the eprom is different from the snes pinout
+/*
+ * snes pinout(some of the pins don't follow the standard pinout)
+ * use this pinout for burning eproms for use with snes.
+ * You can also use the other pinout and mess up the rom using utilities
+ * available online
+ */
+ 
 int adrPins[20]={22,//eprom A0  snes A0
                   23,//eprom A1  snes A1
                   24,//eprom A2  snes A2
@@ -23,16 +29,41 @@ int adrPins[20]={22,//eprom A0  snes A0
                   35,//eprom A13 snes A13
                   36,//eprom A14 snes A14
                   37,//eprom A15 snes A15
-                  40,//38,//eprom A16 snes A18 *
-                  41,//39,//eprom A17 snes A19 *
-                  38,//40,//eprom A18 snes A16 *
-                  39,//41 //eprom A19 snes A17 *
+                  40,//eprom A18 snes A16 *
+                  41,//eprom A19 snes A17 *
+                  38,//eprom A16 snes A18 *
+                  39,//eprom A17 snes A19 * 
                   };
 
+/*                  
+ *Regular eprom pinout, uncommnet this one and comment the above                   
+ *to burn regular eproms for use with other systems.
+ *You may have to actually edit this for use with your console/8bit computer
+ *The pinout from the eprom is different from the snes pinout
+int adrPins[20]={22,//eprom A0  snes A0
+                  23,//eprom A1  snes A1
+                  24,//eprom A2  snes A2
+                  25,//eprom A3  snes A3
+                  26,//eprom A4  snes A4
+                  27,//eprom A5  snes A5
+                  28,//eprom A6  snes A6
+                  29,//eprom A7  snes A7
+                  30,//eprom A8  snes A8
+                  31,//eprom A9  snes A9
+                  32,//eprom A10 snes A10
+                  33,//eprom A11 snes A11
+                  34,//eprom A12 snes A12
+                  35,//eprom A13 snes A13
+                  36,//eprom A14 snes A14
+                  37,//eprom A15 snes A15
+                  38,//eprom A16 snes A18 *
+                  39,//eprom A17 snes A19 *
+                  40,//eprom A18 snes A16 *
+                  41 //eprom A19 snes A17 *
+                  };
+*/
 char dataPins[8]={5,6,7,8,9,10,11,12};
 
-
-*/
 byte inByte=0;
 unsigned int secH=0,secL=0;
 
