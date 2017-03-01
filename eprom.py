@@ -58,7 +58,7 @@ while True:
             f.write(data)
             numBytes=numBytes+1
         f.close()
-        print("Done\n")
+        print("\nDone\n")
     #Burn EPROM, see schematic at my website
     if(option==2):
         name=input("What's the name of the file?")
@@ -85,7 +85,7 @@ while True:
             print("Writing data. Current porcentage:{:.2%}".format(i/numsectors),end='\r')
             #print("CHK:", CHK)
             response=~CHK
-
+            
             #keeps trying while the replied checksum is not correct
             while response!=CHK:
                 ser.write(data)
