@@ -143,9 +143,9 @@ while True:
             print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
         else:
             print("Eprom size changed to ",romsize/(1024),"KB\n")
-    #same as reading
+    #This is for checking if the eprom was programmed right
     if(option==6):
-        #same as reading
+        #Reads each byte and compares with a byte in the file
         print("This compares a eprom with a file in the script folder\n")
         name=input("\nWhat's the name of the file?\n")
         f = open(name, 'rb')
@@ -156,10 +156,12 @@ while True:
         while (numBytes<romsize):
             while ser.inWaiting()==0:
                 print("Reading from eprom. Current porcentage:{:.2%}".format(numBytes/romsize),end='\r')
-                time.sleep(0.1)
+                time.sleep(0.01)
             eprom_byte = ser.read(1)
             file_byte = f.read(1)
             if(eprom_byte!=file_byte):
+                #the \033[031m and \033[0m sequence are ansi sequences that turn text red and cancel it respectively
+                #I dont know how windows handle them
                 print("\n\033[31mFound mismatch at",hex(f.tell()))
                 print("- eprom byte:",hex(ord(eprom_byte)),"- file byte:",hex(ord(file_byte)),"\033[0m\n")
             numBytes=numBytes+1
