@@ -162,7 +162,7 @@ while True:
             eprom_byte = ser.read(1)
             file_byte = f.read(1)
             if(eprom_byte!=file_byte):
-                print("\n\033[93mFound mismatch at",hex(f.tell()))
+                print("\n\033[31mFound mismatch at",hex(f.tell()))
                 print("- eprom byte:",hex(ord(eprom_byte)),"- file byte:",hex(ord(file_byte)),"\033[0m\n")
             numBytes=numBytes+1
         print("\nDone\n")
