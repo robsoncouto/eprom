@@ -7,8 +7,8 @@ ser = serial.Serial('/dev/ttyACM0', 250000, timeout=0)
 romsize=1024
 
 print("      ________    _________    _________    _________    _____________ ")
-print("    /  ______/|  /  ___   /|  /  ___   /|  /   __   /|  /            /|")
-print("   /  /_____ |/ /  /__/  / / /  /__/  / / /  /  /  / / /  /\   /\   / /")
+print("    /  ______/|  /  ___   /|  /  ___   /|  /   __   /|  /  _    _    /|")
+print("   /  /_____ |/ /  /__/  / / /  /__/  / / /  /  /  / / /  / /  / /  / /")
 print("  /  ______/|  /   _____/ / /     ___/ / /  /  /  / / /  / /  / /  / / ")
 print(" /  /______|/ /  / _____|/ /  /\  \__|/ /  /__/  / / /  / /  / /  / /  ")
 print("/________/|  /__/ /       /__/ /\__/|  /________/ / /__/ /__/ /__/ /   ")
@@ -85,7 +85,7 @@ while True:
             print("Writing data. Current porcentage:{:.2%}".format(i/numsectors),end='\r')
             #print("CHK:", CHK)
             response=~CHK
-            
+
             #keeps trying while the replied checksum is not correct
             while response!=CHK:
                 ser.write(data)
@@ -146,3 +146,23 @@ while True:
     if(option==6):
         print("See ya!")
         break
+    if(option==7):
+        #same as reading
+        print("This compares a eprom with a file in the script folder\n")
+        name=input("\nWhat's the name of the file?\n")
+        f = open(name, 'rb')
+        ser.flushInput()
+        ser.write(b"\x55")
+        ser.write(bytes("r","ASCII"))
+        numBytes=0
+        while (numBytes<romsize):
+            while ser.inWaiting()==0:
+                print("Reading from eprom. Current porcentage:{:.2%}".format(numBytes/romsize),end='\r')
+                time.sleep(0.1)
+            eprom_byte = ser.read(1)
+            file_byte = f.read(1)
+            if(eprom_byte!=file_byte):
+                print("\n\033[93mFound mismatch at",hex(f.tell()))
+                print("- eprom byte:",hex(ord(eprom_byte)),"- file byte:",hex(ord(file_byte)),"\033[0m\n")
+            numBytes=numBytes+1
+        print("\nDone\n")
