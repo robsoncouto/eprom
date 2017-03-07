@@ -32,8 +32,9 @@ while True:
     print("          3-about this script     ")
     print("          4-blank check           ")
     print("          5-select chip size      ")
+    print("          6-verify eprom          ")
     print("                                  ")
-    print("          6-quit                \n")
+    print("          7-quit                \n")
     #get option from user:
     option=int(input("Please insert a number:"))
 
@@ -142,11 +143,8 @@ while True:
             print("Eprom size changed to ",romsize/(1024*1024),"MB\n")
         else:
             print("Eprom size changed to ",romsize/(1024),"KB\n")
-
+    #same as reading
     if(option==6):
-        print("See ya!")
-        break
-    if(option==7):
         #same as reading
         print("This compares a eprom with a file in the script folder\n")
         name=input("\nWhat's the name of the file?\n")
@@ -166,3 +164,6 @@ while True:
                 print("- eprom byte:",hex(ord(eprom_byte)),"- file byte:",hex(ord(file_byte)),"\033[0m\n")
             numBytes=numBytes+1
         print("\nDone\n")
+    if(option==7):
+        print("See ya!")
+        break
